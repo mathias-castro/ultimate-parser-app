@@ -1,0 +1,125 @@
+:root {
+  /* Surfaces — cool, slightly tinted (Linear/Stripe vibe) */
+  --bg: #f4f5fa;
+  --panel: #ffffff;
+  --panel-2: #f6f7fb;
+  --panel-3: #eef0f7;
+  --border: #e7e8f0;
+  --border-strong: #d6d8e4;
+
+  /* Text */
+  --text: #16161d;
+  --text-soft: #3d3d4d;
+  --muted: #8385a0;
+
+  /* Accent — indigo→violet */
+  --accent: #5b5bf2;
+  --accent-2: #7c5cfc;
+  --accent-press: #4a44d6;
+  --accent-soft: #ecebfe;
+  --accent-grad: linear-gradient(135deg, #6366f1 0%, #7c5cfc 100%);
+
+  /* Semantic */
+  --green: #0f8a4f;
+  --green-soft: #e7f8ef;
+  --green-bd: #b9e8cf;
+  --red: #d8412f;
+  --red-soft: #fdeeec;
+  --red-bd: #f6ccc6;
+  --amber: #b5760a;
+  --amber-soft: #fdf4e3;
+  --amber-bd: #f1ddb0;
+
+  /* Effects */
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-xs: 0 1px 2px rgba(20, 20, 40, 0.05);
+  --shadow-sm: 0 1px 3px rgba(20, 20, 40, 0.06), 0 1px 2px rgba(20, 20, 40, 0.04);
+  --shadow: 0 4px 12px rgba(30, 27, 75, 0.06), 0 12px 32px rgba(30, 27, 75, 0.07);
+  --shadow-accent: 0 6px 18px rgba(99, 102, 241, 0.32);
+  --mono: "JetBrains Mono", "SFMono-Regular", "Menlo", "Consolas", monospace;
+  --sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--sans);
+  color: var(--text);
+  font-size: 14.5px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(
+      900px 520px at 88% -8%,
+      rgba(124, 92, 252, 0.16),
+      transparent 60%
+    ),
+    radial-gradient(
+      820px 480px at 0% 0%,
+      rgba(99, 102, 241, 0.12),
+      transparent 55%
+    );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.014em;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+a {
+  color: var(--accent);
+}
+
+code,
+pre,
+textarea,
+.mono {
+  font-family: var(--mono);
+}
+
+::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b9bccd;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.22);
+}
