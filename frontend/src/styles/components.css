@@ -152,6 +152,80 @@ textarea {
   filter: none;
 }
 
+
+/* AST graph */
+.ast-graph-wrapper {
+  width: 100%;
+  min-height: 160px;
+}
+
+.ast-graph-svg {
+  display: block;
+}
+
+/* center svg when smaller than container but allow overflow when larger */
+.ast-graph-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: auto;
+}
+
+.ast-graph-wrapper .ast-graph-svg {
+  flex: 0 0 auto;
+}
+
+.ast-nodes .node-rect {
+  fill: #fff;
+  stroke: #dfe4f6;
+  stroke-width: 1.2;
+}
+
+.ast-nodes .node-term {
+  fill: var(--green-soft);
+  stroke: var(--green-bd);
+}
+
+.ast-nodes .node-nonterm {
+  fill: #fff;
+  stroke: var(--accent-soft);
+}
+
+.ast-edges path {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* zoom controls */
+.ast-zoom-controls {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 20;
+}
+
+.ast-zoom-controls button {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+}
+
+.ast-graph-wrapper .ast-graph-svg {
+  cursor: grab;
+}
+
+.ast-graph-wrapper .ast-graph-svg:active {
+  cursor: grabbing;
+}
 .btn-primary:disabled {
   box-shadow: none;
 }
@@ -468,6 +542,76 @@ tbody tr:hover td {
   color: var(--muted);
 }
 
+/* ---------- AST ---------- */
+.ast-wrapper {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--panel-2);
+  padding: 0.75rem;
+}
+
+.ast-tree,
+.ast-tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.ast-node {
+  position: relative;
+  margin: 0.3rem 0;
+}
+
+.ast-node::before {
+  content: "";
+  position: absolute;
+  left: -0.68rem;
+  top: 0.95rem;
+  width: 0.58rem;
+  border-top: 1px solid var(--border-strong);
+}
+
+.ast-node-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 1.85rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--accent-press);
+  font-family: var(--mono);
+  font-size: 0.79rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-xs);
+}
+
+.ast-node-label.terminal {
+  border-color: var(--green-bd);
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.ast-node-label.nonterminal {
+  border-color: var(--accent-soft);
+  background: #fff;
+  color: var(--accent-press);
+}
+
+.ast-node-kind {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.ast-children {
+  margin-top: 0.35rem;
+  padding-left: 1.15rem;
+  border-left: 1px solid var(--border);
+}
 .step-action {
   display: flex;
   align-items: center;

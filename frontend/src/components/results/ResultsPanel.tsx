@@ -5,6 +5,7 @@ import GrammarDiagnostics from "./GrammarDiagnostics";
 import FirstFollowTables from "./FirstFollowTables";
 import ParserTable from "./ParserTable";
 import ProductionLegend from "./ProductionLegend";
+import AstViewer from "./AstViewer";
 import StatesViewer from "./StatesViewer";
 import AutomatonViewer from "./AutomatonViewer";
 import AutomatonGraph from "./AutomatonGraph";
@@ -20,6 +21,7 @@ type TabId =
   | "grammar"
   | "sets"
   | "tables"
+  | "ast"
   | "automaton"
   | "steps"
   | "explanation";
@@ -31,6 +33,7 @@ export default function ResultsPanel({ result }: Props) {
   const hasLr =
     result.action_table.rows.length > 0 || result.goto_table.rows.length > 0;
   const hasTables = hasLl1 || hasLr;
+  const hasAst = Boolean(result.ast);
   const hasAutomaton =
     result.states.length > 0 || result.transitions.length > 0;
   const hasSteps = result.steps.length > 0;
@@ -51,6 +54,7 @@ export default function ResultsPanel({ result }: Props) {
     if (hasAnalysis) list.push({ id: "grammar", label: "Gramática" });
     if (hasSets) list.push({ id: "sets", label: "FIRST / FOLLOW" });
     if (hasTables) list.push({ id: "tables", label: "Tablas" });
+    if (hasAst) list.push({ id: "ast", label: "AST" });
     if (hasAutomaton)
       list.push({
         id: "automaton",
@@ -65,6 +69,7 @@ export default function ResultsPanel({ result }: Props) {
     hasAnalysis,
     hasSets,
     hasTables,
+    hasAst,
     hasAutomaton,
     hasSteps,
     result.states.length,
@@ -73,6 +78,8 @@ export default function ResultsPanel({ result }: Props) {
 
   const preferred: TabId = hasSteps
     ? "steps"
+    : hasAst
+      ? "ast"
     : hasTables
       ? "tables"
       : hasAnalysis
@@ -145,6 +152,8 @@ export default function ResultsPanel({ result }: Props) {
           />
         </>
       )}
+
+      {active === "ast" && result.ast && <AstViewer ast={result.ast} />}
 
       {active === "automaton" && (
         <>

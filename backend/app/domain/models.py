@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 @dataclass(frozen=True)
@@ -44,6 +44,13 @@ class ParseStep:
             "input": self.input,
             "action": self.action,
         }
+
+
+class AstNode(BaseModel):
+
+    label: str
+    kind: str = "nonterminal"
+    children: list[AstNode] = Field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -105,6 +112,7 @@ class AnalyzeResponse(BaseModel):
     algorithm: str
     message: str
     grammar: dict[str, Any]
+    ast: AstNode | None = None
     first: dict[str, Any]
     follow: dict[str, Any]
     ll1_table: dict[str, Any]

@@ -24,6 +24,7 @@ def _empty_response(algorithm: str, message: str) -> AnalyzeResponse:
         algorithm=algorithm,
         message=message,
         grammar={},
+        ast=None,
         first={},
         follow={},
         ll1_table=formatters.empty_table(),
@@ -71,6 +72,7 @@ def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         algorithm=algorithm,
         message="",
         grammar=grammar_view,
+        ast=None,
         first=formatters.sets_to_dict(first_view),
         follow=formatters.sets_to_dict(follow_view),
         ll1_table=formatters.empty_table(),
@@ -121,6 +123,7 @@ def _run_recursive_descent(
     response.accepted = result["accepted"]
     response.message = result["message"]
     response.conflicts = result["conflicts"]
+    response.ast = result.get("tree")
     response.steps = formatters.steps_to_list(result["steps"])
 
 
@@ -142,6 +145,7 @@ def _run_ll1(grammar, tokens, first_sets, follow_sets, response: AnalyzeResponse
     result = ll1_parser.parse_ll1(grammar, tokens, table)
     response.accepted = result["accepted"]
     response.message = result["message"]
+    response.ast = result.get("tree")
     response.steps = formatters.steps_to_list(result["steps"])
 
 
@@ -172,6 +176,7 @@ def _run_lr0(grammar, tokens, response: AnalyzeResponse) -> None:
     result = lr0_parser.parse_lr0(grammar, tokens, action, goto)
     response.accepted = result["accepted"]
     response.message = result["message"]
+    response.ast = result.get("tree")
     response.steps = formatters.steps_to_list(result["steps"])
 
 
@@ -190,6 +195,7 @@ def _run_slr(grammar, tokens, follow_sets, response: AnalyzeResponse) -> None:
     result = slr_parser.parse_slr(grammar, tokens, action, goto)
     response.accepted = result["accepted"]
     response.message = result["message"]
+    response.ast = result.get("tree")
     response.steps = formatters.steps_to_list(result["steps"])
 
 
@@ -206,6 +212,7 @@ def _run_lr1(grammar, tokens, first_sets, response: AnalyzeResponse) -> None:
     result = lr1_parser.parse_lr1(grammar, tokens, action, goto)
     response.accepted = result["accepted"]
     response.message = result["message"]
+    response.ast = result.get("tree")
     response.steps = formatters.steps_to_list(result["steps"])
 
 
@@ -229,4 +236,5 @@ def _run_lalr(grammar, tokens, first_sets, response: AnalyzeResponse) -> None:
     result = lalr_parser.parse_lalr(grammar, tokens, action, goto)
     response.accepted = result["accepted"]
     response.message = result["message"]
+    response.ast = result.get("tree")
     response.steps = formatters.steps_to_list(result["steps"])

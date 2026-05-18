@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.domain.grammar import END_MARKER
-from app.domain.models import Grammar, LR0Item, ParseStep, Production
+from app.domain.models import AstNode, Grammar, LR0Item, ParseStep, Production
 
 
 def augmented_start(grammar: Grammar) -> str:
@@ -168,6 +168,7 @@ def run_lr_parser(
     productions = numbered_productions(grammar)
     state_stack: list[int] = [0]
     symbol_stack: list[str] = []
+    node_stack: list[AstNode] = []
     position = 0
     steps: list[ParseStep] = []
 
@@ -213,6 +214,7 @@ def run_lr_parser(
             return {
                 "accepted": True,
                 "steps": steps,
+                "tree": node_stack[-1] if node_stack else None,
                 "message": "Cadena aceptada por el parser.",
             }
 
@@ -220,6 +222,7 @@ def run_lr_parser(
             target = int(entry[1:])
             snapshot(f"Shift «{current}», ir a I{target}")
             symbol_stack.append(current)
+            node_stack.append(AstNode(label=current, kind="terminal"))
             state_stack.append(target)
             position += 1
         elif entry.startswith("r"):
@@ -227,9 +230,11 @@ def run_lr_parser(
             production = productions[prod_index]
             rhs_len = len(production.right)
             snapshot(f"Reduce por {production}")
+            popped_nodes: list[AstNode] = []
             for _ in range(rhs_len):
                 state_stack.pop()
                 symbol_stack.pop()
+                popped_nodes.append(node_stack.pop())
             exposed = state_stack[-1]
             goto_target = goto_table.get((exposed, production.left))
             if goto_target is None:
@@ -239,17 +244,32 @@ def run_lr_parser(
                 return {
                     "accepted": False,
                     "steps": steps,
+                    "tree": None,
                     "message": "Cadena rechazada: GOTO indefinido.",
                 }
+            parent = AstNode(
+                label=production.left,
+                kind="nonterminal",
+                children=list(reversed(popped_nodes)),
+            )
             symbol_stack.append(production.left)
+            node_stack.append(parent)
             state_stack.append(goto_target)
         else:
             snapshot(f"Error: acción desconocida «{entry}»")
             return {
                 "accepted": False,
                 "steps": steps,
+                "tree": None,
                 "message": "Cadena rechazada: acción inválida en la tabla.",
             }
+
+    return {
+        "accepted": False,
+        "steps": steps,
+        "tree": None,
+        "message": "Cadena rechazada: el análisis no terminó.",
+    }
 
 
 def states_to_list(states: list) -> list[dict]:

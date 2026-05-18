@@ -49,6 +49,8 @@ docker compose up --build
 
 - **Animación del análisis:** reproductor paso a paso (play/pausa/anterior/
   siguiente/scrub) que visualiza la pila, los símbolos y la entrada.
+- **Árbol sintáctico:** visualización jerárquica del AST generado por el
+  parser, con distinción visual entre terminales y no terminales.
 - **Diagrama del autómata LR:** grafo SVG interactivo de estados y
   transiciones (con vista alterna de tabla y lista de items).
 - **Diagnóstico de la gramática:** detecta recursión por la izquierda,

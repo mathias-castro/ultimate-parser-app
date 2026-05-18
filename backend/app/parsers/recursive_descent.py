@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.domain.models import Grammar, ParseStep, Production
+from app.domain.models import AstNode, Grammar, ParseStep, Production
 from app.parsers.diagnostics import analyze_grammar
 from app.parsers.ll1_parser import build_ll1_table
 
@@ -47,17 +47,18 @@ class _RecursiveDescentParser:
                 "terminada para descenso recursivo."
             )
 
-    def _match(self, expected: str) -> None:
+    def _match(self, expected: str) -> AstNode:
         self._spend()
         if self.current == expected:
             self._trace("match", f"Match «{expected}»")
             self.position += 1
+            return AstNode(label=expected, kind="terminal")
         else:
             raise SyntaxError(
                 f"Se esperaba «{expected}» pero se encontró «{self.current}»."
             )
 
-    def parse_symbol(self, non_terminal: str) -> None:
+    def parse_symbol(self, non_terminal: str) -> AstNode:
         self._spend()
         entry = self.table.get((non_terminal, self.current))
         if entry is None:
@@ -71,14 +72,16 @@ class _RecursiveDescentParser:
 
         if not production.right:
             self._trace(function, f"Aplicar {non_terminal} -> epsilon")
-            return
+            return AstNode(label=non_terminal)
 
         self._trace(function, f"Aplicar {entry}")
+        children: list[AstNode] = []
         for symbol in production.right:
             if symbol in self.grammar.non_terminals:
-                self.parse_symbol(symbol)
+                children.append(self.parse_symbol(symbol))
             else:
-                self._match(symbol)
+                children.append(self._match(symbol))
+        return AstNode(label=non_terminal, children=children)
 
 
 def parse_recursive_descent(
@@ -117,7 +120,7 @@ def parse_recursive_descent(
 
     parser = _RecursiveDescentParser(grammar, tokens, table)
     try:
-        parser.parse_symbol(grammar.start_symbol)
+        tree = parser.parse_symbol(grammar.start_symbol)
         if parser.current != "$":
             raise SyntaxError(
                 f"Sobran tokens en la entrada, comenzando en "
@@ -128,6 +131,7 @@ def parse_recursive_descent(
             "accepted": True,
             "steps": parser.steps,
             "conflicts": [],
+            "tree": tree,
             "message": "Cadena aceptada por descenso recursivo.",
         }
     except (SyntaxError, IndexError) as error:
@@ -148,5 +152,6 @@ def parse_recursive_descent(
             "accepted": False,
             "steps": parser.steps,
             "conflicts": [],
+            "tree": None,
             "message": f"Cadena rechazada: {message}",
         }

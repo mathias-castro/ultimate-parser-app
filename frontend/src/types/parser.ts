@@ -14,6 +14,12 @@ export interface AnalyzeRequest {
   algorithm: Algorithm;
 }
 
+export interface AstNode {
+  label: string;
+  kind?: "terminal" | "nonterminal";
+  children: AstNode[];
+}
+
 export interface GenericTable {
   columns: string[];
   rows: Record<string, string>[];
@@ -64,6 +70,7 @@ export interface AnalyzeResponse {
   algorithm: string;
   message: string;
   grammar: GrammarInfo;
+  ast?: AstNode | null;
   first: Record<string, string[]>;
   follow: Record<string, string[]>;
   ll1_table: GenericTable;

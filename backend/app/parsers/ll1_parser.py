@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.domain.grammar import END_MARKER, EPSILON
-from app.domain.models import Grammar, ParseStep, Production
+from app.domain.models import AstNode, Grammar, ParseStep, Production
 from app.parsers.first_follow import first_of_sequence
 
 
@@ -56,14 +56,20 @@ def parse_ll1(
 ) -> dict:
     production_by_str = {str(p): p for p in grammar.productions}
 
-    stack: list[str] = [END_MARKER, grammar.start_symbol]
+    root = AstNode(label=grammar.start_symbol)
+    stack: list[tuple[str, AstNode]] = [
+        (END_MARKER, AstNode(label=END_MARKER, kind="terminal")),
+        (grammar.start_symbol, root),
+    ]
     position = 0
     steps: list[ParseStep] = []
 
     def snapshot(action: str) -> None:
+        # stack is a list of (symbol, AstNode) tuples; join only the symbol strings
+        stack_str = " ".join(s for s, _ in stack)
         steps.append(
             ParseStep(
-                stack=" ".join(stack),
+                stack=stack_str,
                 symbols="",
                 input=" ".join(input_tokens[position:]),
                 action=action,
@@ -71,7 +77,7 @@ def parse_ll1(
         )
 
     while stack:
-        top = stack[-1]
+        top, node = stack[-1]
         current = input_tokens[position]
 
         if top == END_MARKER and current == END_MARKER:
@@ -79,6 +85,7 @@ def parse_ll1(
             return {
                 "accepted": True,
                 "steps": steps,
+                "tree": root,
                 "message": "Cadena aceptada por el parser LL(1).",
             }
 
@@ -94,6 +101,7 @@ def parse_ll1(
                 return {
                     "accepted": False,
                     "steps": steps,
+                    "tree": None,
                     "message": f"Cadena rechazada: se esperaba «{top}».",
                 }
         else:
@@ -105,6 +113,7 @@ def parse_ll1(
                 return {
                     "accepted": False,
                     "steps": steps,
+                    "tree": None,
                     "message": (
                         f"Cadena rechazada: no existe entrada para "
                         f"M[{top}, {current}]."
@@ -114,11 +123,20 @@ def parse_ll1(
             production = production_by_str[entry]
             snapshot(f"Aplicar {entry}")
             stack.pop()
-            for symbol in reversed(production.right):
-                stack.append(symbol)
+            children = [
+                AstNode(
+                    label=symbol,
+                    kind="nonterminal" if symbol in grammar.non_terminals else "terminal",
+                )
+                for symbol in production.right
+            ]
+            node.children = children
+            for symbol, child in reversed(list(zip(production.right, children))):
+                stack.append((symbol, child))
 
     return {
         "accepted": False,
         "steps": steps,
+        "tree": None,
         "message": "Cadena rechazada: la pila se vació antes de tiempo.",
     }
