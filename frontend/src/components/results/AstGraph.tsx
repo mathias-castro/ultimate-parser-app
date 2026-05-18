@@ -17,7 +17,6 @@ interface Props {
 
 const H_SPACING = 90;
 const V_SPACING = 80;
-const NODE_PADDING_X = 10;
 const NODE_PADDING_Y = 6;
 
 function buildPositions(root: AstNode) {
@@ -30,7 +29,7 @@ function buildPositions(root: AstNode) {
     nodes[id] = {
       id,
       label: node.label,
-      kind: node.kind,
+      kind: (node.kind ?? "nonterminal") as "terminal" | "nonterminal",
       x: 0,
       y: depth * V_SPACING,
       depth,
