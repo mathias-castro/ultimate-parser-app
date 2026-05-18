@@ -42,7 +42,7 @@ docker compose up --build
 ## 5. URLs
 
 - Frontend: [https://ultimate-parser-jr2lxxtsb-mathias-projects-3ddf2545.vercel.app](https://ultimate-parser-jr2lxxtsb-mathias-projects-3ddf2545.vercel.app)
-- Backend: [http://localhost:8000](https://ultimate-parser-app.onrender.com)
+- Backend: https://ultimate-parser-app.onrender.com
 
 ## 5.1 Funcionalidades didácticas destacadas
 
