@@ -41,9 +41,8 @@ docker compose up --build
 
 ## 5. URLs
 
-- Frontend: http://localhost:5173
-- Backend: http://localhost:8000
-- Swagger: http://localhost:8000/docs
+- Frontend: [https://ultimate-parser-jr2lxxtsb-mathias-projects-3ddf2545.vercel.app](https://ultimate-parser-jr2lxxtsb-mathias-projects-3ddf2545.vercel.app)
+- Backend: [http://localhost:8000](https://ultimate-parser-app.onrender.com)
 
 ## 5.1 Funcionalidades didácticas destacadas
 
@@ -58,20 +57,6 @@ docker compose up --build
 - **Navegación por pestañas** y **explicación pedagógica** generada por
   reglas internas (sin APIs externas).
 - **Leyenda de producciones** para interpretar las tablas ACTION/GOTO.
-
-## 5.2 Despliegue en la nube (opcional)
-
-El backend (FastAPI) y el frontend (estático tras `npm run build`) se pueden
-desplegar por separado. El frontend lee la URL del backend desde la variable
-de entorno **`VITE_API_BASE_URL`** en tiempo de build:
-
-```bash
-# ejemplo: frontend apuntando a un backend desplegado
-VITE_API_BASE_URL="https://mi-backend.onrender.com" npm run build
-```
-
-Recuerda añadir el dominio del frontend a `ALLOWED_ORIGINS` en
-`backend/app/core/config.py`. Sin la variable, usa `http://localhost:8000`.
 
 ## 6. Backend sin Docker
 
