@@ -56,7 +56,6 @@ docker compose up --build
 - **Navegación por pestañas** y **explicación pedagógica** generada por
   reglas internas (sin APIs externas).
 - **Leyenda de producciones** para interpretar las tablas ACTION/GOTO.
-- **Descarga del resultado** completo en `.txt`.
 
 ## 5.2 Despliegue en la nube (opcional)
 

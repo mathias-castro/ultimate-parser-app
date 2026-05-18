@@ -9,7 +9,7 @@ curso.
 - **ChatGPT / asistente de IA conversacional:** apoyo en el diseño de la
   arquitectura, redacción de algoritmos de análisis sintáctico y
   documentación.
-- **IA integrada en el editor (GitHub Copilot / asistente de VSCode):**
+- **IA integrada en el editor (GitHub Copilot / asistente de VSCode / Claude Code):**
   autocompletado y sugerencias mientras se escribía el código.
 
 ## En qué partes se usó IA
