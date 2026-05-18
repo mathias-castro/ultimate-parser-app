@@ -20,6 +20,23 @@ export interface AstNode {
   children: AstNode[];
 }
 
+export interface AnalyzeSummary {
+  id: string; // unique id for the entry (uuid or timestamp-based)
+  timestamp: string; // ISO string
+  algorithm: Algorithm;
+  input_string: string;
+  grammar_text?: string;
+  accepted?: boolean;
+  message?: string;
+  ast?: AstNode | null;
+}
+
+export interface HistoryEntry extends AnalyzeSummary {
+  // reserved for future metadata (e.g., tags, notes)
+  tags?: string[];
+  fullResult?: AnalyzeResponse;
+}
+
 export interface GenericTable {
   columns: string[];
   rows: Record<string, string>[];

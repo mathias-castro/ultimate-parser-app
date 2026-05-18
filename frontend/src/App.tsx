@@ -6,6 +6,7 @@ import AlgorithmSelector from "./components/grammar/AlgorithmSelector";
 import ExampleSelector from "./components/grammar/ExampleSelector";
 import GrammarEditor from "./components/grammar/GrammarEditor";
 import ResultsPanel from "./components/results/ResultsPanel";
+import HistoryPanel from "./components/results/HistoryPanel";
 import Card from "./components/ui/Card";
 import { useParser } from "./hooks/useParser";
 import type { Algorithm, Example } from "./types/parser";
@@ -23,7 +24,7 @@ export default function App() {
   const [algorithm, setAlgorithm] = useState<Algorithm>("LL1");
   const [examples, setExamples] = useState<Example[]>([]);
 
-  const { loading, error, result, analyze, clearResult } = useParser();
+  const { loading, error, result, analyze, clearResult, setExternalResult } = useParser();
 
   useEffect(() => {
     getExamples()
@@ -37,6 +38,16 @@ export default function App() {
       input_string: inputString,
       algorithm,
     });
+  };
+
+  const handleLoadHistory = (entry: any) => {
+    // load grammar/input/algorithm and set the result if available
+    if (entry.grammar_text) setGrammarText(entry.grammar_text);
+    if (entry.input_string) setInputString(entry.input_string);
+    if (entry.algorithm) setAlgorithm(entry.algorithm);
+    if (entry.fullResult && setExternalResult) {
+      setExternalResult(entry.fullResult);
+    }
   };
 
   const handleClear = () => {
@@ -80,6 +91,7 @@ export default function App() {
                 <span>{error}</span>
               </div>
             )}
+            <HistoryPanel onLoad={handleLoadHistory} />
             {!error && !result && (
               <div className="card">
                 <div className="empty-state">
